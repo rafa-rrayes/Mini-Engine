@@ -39,9 +39,19 @@ ChecarColidir(): This function checks if two objects have collided. It takes the
 if terra.ChecarColidir(asteroide):
 ```
 Colide(): This function handles the collision between two objects. It takes two objects and an optional COR argument, which represents the coefficient of restitution. By default, it is set to 1 (perfectly elastic collision).
-Example:
 
 ```
 if terra.ChecarColidir(asteroide):
   MiniEngine.Colide(asteroide, terra, COR=1)
 ```
+
+acelerar(dV, angulo): you can use acelerar to accelerate objects, it takes two arguments, dV the difference in velocity, and the angle of the acceleration.
+
+```
+terra.acelerar(9.8, 270)
+```
+
+other:
+
+distancia(objeto1, objeto2): Returns the distance between to objects
+asteroide.Borda(): Makes the object colide in the borders of the screen
