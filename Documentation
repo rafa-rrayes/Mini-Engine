@@ -1,0 +1,53 @@
+MiniEngine and Renderer Documentation
+Overview
+The MiniEngine module is a simple 2D physics engine for simulating objects in a graphical environment. It is built using the Pygame library and supports various object interactions, such as collisions and gravitational forces. The Renderer class allows users to render simulations and store the objects' positions over time.
+
+MiniEngine Module
+Tela Class
+The Tela class is used to create a display window for the simulation.
+
+Initialization
+python
+Copy code
+Tela(largura, altura, titulo, tick=60, speed=1)
+largura (int): Width of the display window.
+altura (int): Height of the display window.
+titulo (str): Title of the display window.
+tick (int, optional): Target frame rate for the simulation. Default is 60.
+speed (float, optional): Speed factor of the simulation. Default is 1.
+Methods
+add_object(obj): Adds an object to the simulation.
+desenhar(objeto): Draws an object on the display window.
+Objeto Class
+The Objeto class represents objects in the simulation. Each object is a rectangular shape with physical properties.
+
+Initialization
+python
+Copy code
+Objeto(altura, largura, posicao, peso, velocidade, direcao, cor, tela, gravidade=False)
+altura (int): Height of the object.
+largura (int): Width of the object.
+posicao (tuple): Initial (x, y) position of the object.
+peso (float): Mass of the object.
+velocidade (float): Initial speed of the object.
+direcao (float): Initial direction of the object in degrees.
+cor (str): Color of the object. Supports various color names.
+tela (Tela): Instance of the Tela class.
+gravidade (bool, optional): If True, the object is affected by gravity. Default is False.
+Methods
+atualizarPos(dt, gravidade=False): Update the object's position based on its speed, direction, and time interval dt. If gravidade is True, the object will be affected by gravity.
+ChecarColidir(objeto): Check if the object is colliding with another object. Returns True if there's a collision, False otherwise.
+Borda(): Check if the object has reached the boundary of the display window and reverse its direction if necessary.
+acelerar(dV, angulo): Accelerate the object by a specified change in velocity dV at a given angle angulo.
+gravitar(object2, dt, g=0, distancia=False): Apply gravitational force between the object and another object object2. The force can be calculated using the provided constant g, or the distance between the objects can be taken into account if distancia is True.
+Functions
+distancia(objeto1, objeto2): Calculate the distance between two objects.
+Colide(object1, object2, COR=1): Handle collisions between two objects, updating their velocities and directions based on the coefficient of restitution COR.
+Renderer Module
+Renderer Class
+The Renderer class is used to render simulations and store the positions of objects over time.
+
+Initialization
+python
+Copy code
+Renderer(tela, objetos, dt=1/60, lenght=2, speed=1, gravity=False)
