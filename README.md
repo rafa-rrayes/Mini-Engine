@@ -1,5 +1,7 @@
 This program is a 2D physics simulation, that provides functionalities to create, visualize, and manipulate objects on a screen using the Pygame library. The simulation is capable of handling gravity, object collisions, and various other properties related to the motion of the objects. It is important to note that this is still the first version of the program. As such, the precision and accuracy of the simulations might not be at very precise, especially in small scales.
 
+Co-author: Chat-GPT 
+
 Creating a simulation window: The Tela class creates a simulation window with specified dimensions and title. The window is displayed using Pygame.
 ```
 import pygame
