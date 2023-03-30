@@ -1,59 +1,78 @@
-This program is a 2D physics simulation, that provides functionalities to create, visualize, and manipulate objects on a screen using the Pygame library. The simulation is capable of handling gravity, object collisions, and various other properties related to the motion of the objects. It is important to note that this is still the first version of the program. As such, the precision and accuracy of the simulations might not be at very precise, especially in small scales.
+# PyPhysicsSim
 
-Co-author: Chat-GPT 
+Miniengine is a simple physics simulation library built on top of Pygame. It allows users to simulate the motion of objects, calculate collisions, and visualize the results. The library includes two main components: the `MiniEngine` module for handling physics calculations, and the `Renderer` class for rendering and displaying the simulations.
 
-Creating a simulation window: The Tela class creates a simulation window with specified dimensions and title. The window is displayed using Pygame.
-```
-import pygame
-import MiniEngine
+## Installation
 
-tela = MiniEngine.Tela(800, 800, "Simulação")
-```
+To install PyPhysicsSim, simply clone this GitHub repository to your local machine.
 
-Creating and displaying objects: The Objeto class creates and display objects with specified dimensions, position, mass, velocity, direction and color.
+## Dependencies
 
-```
-terra = MiniEngine.Objeto(20, 20, (400, 600), 30, 40, -180, "verde", tela)
-sol = MiniEngine.Objeto(50, 50, (400, 400), 20, 0, 0, "amarelo", tela)
-asteroide = MiniEngine.Objeto(10, 10, (-770, -770), 20, 40, 45, "cinza", tela)
-``` 
-gravitar(): This function calculates gravitational force between two objects and updates their velocities accordingly. It takes three arguments: the other object, the time interval dt, and the gravitational constant g.
-```
-terra.gravitar(sol, dt, g=10)
-```
+- Pygame
 
-atualizarPos(): This function updates the position of an object based on its current velocity and the time interval dt. If gravidade is set to True, it updates the position considering the force of gravity.
-Example 1 (without gravity):
+## Usage
 
-```
-terra.atualizarPos(dt, gravidade=True)
-```
-gravidade = True means it will take the downwards aceleration due to gravity when calculating the positions
+### MiniEngine Module
 
-desenhar(): This function draws the object on the simulation window.
-```
-tela.desenhar(sol)
-```
+The `MiniEngine` module provides the following classes and functions:
 
-ChecarColidir(): This function checks if two objects have collided. It takes the other object as an argument and returns True if the objects have collided, False otherwise.
+#### Window
 
-```
-if terra.ChecarColidir(asteroide):
-```
-Colide(): This function handles the collision between two objects. It takes two objects and an optional COR argument, which represents the coefficient of restitution. By default, it is set to 1 (perfectly elastic collision).
+`Window` class represents the simulation window. It has the following attributes:
 
-```
-if terra.ChecarColidir(asteroide):
-  MiniEngine.Colide(asteroide, terra, COR=1)
-```
+- width: The width of the simulation window
+- height: The height of the simulation window
+- title: The title of the simulation window
 
-acelerar(dV, angulo): you can use acelerar to accelerate objects, it takes two arguments, dV the difference in velocity, and the angle of the acceleration.
+#### Object
 
-```
-terra.acelerar(9.8, 270)
-```
+`Object` class represents a physical object in the simulation. It has the following attributes:
 
-other:
+- height: The height of the object
+- width: The width of the object
+- position: The initial position of the object
+- mass: The mass of the object
+- speed: The initial speed of the object
+- direction: The initial direction of the object in degrees
+- color: The color of the object
+- window: The simulation window the object belongs to
 
-distancia(objeto1, objeto2): Returns the distance between to objects
-asteroide.Borda(): Makes the object colide in the borders of the screen
+#### Colide
+
+`Colide` function handles the collision between two objects.
+
+### Renderer Class
+
+`Renderer` class is used to visualize the simulation. It has the following attributes:
+
+- window: The simulation window
+- objects: The list of objects in the simulation
+- dt: The time interval between each frame of the simulation
+- length: The total duration of the simulation
+- speed: The speed factor of the simulation
+- gravity: If True, enables gravity in the simulation
+
+The `Renderer` class provides the following methods:
+
+- `bake`: Calculates the positions of objects at each frame
+- `store_positions`: Stores the positions of objects at each frame
+
+### Example
+
+```python
+from MiniEngine import Window, Object, Colide
+from Renderer import Renderer, run
+
+# Create window and objects
+window = Window(800, 800, "Simulação")
+object1 = Object(20, 20, (100, 100), 1, 50, 30, (255, 0, 0), window)
+object2 = Object(20, 20, (300, 300), 1, 50, 200, (0, 255, 0), window)
+
+# Create renderer
+renderer = Renderer(window, [object1, object2], dt=1/60, length=10, speed=1, gravity=False)
+
+# Calculate object positions
+renderer.bake()
+
+# Run the simulation
+run(renderer)
