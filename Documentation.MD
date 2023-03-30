@@ -59,3 +59,45 @@ The `Renderer` class is responsible for running the simulation and rendering the
 * `render(simulation_name)`: Runs the simulation and saves each frame as an image with the given `simulation_name`. The images will be saved in a folder named "renders".
 * `store_positions()`: Stores the positions of objects at each time step in a dictionary.
 * `get_positions()`: Returns the stored positions of objects as a dictionary.
+
+## Example
+
+A small simulation of a tenis ball and a basketball 
+```
+import pygame
+import Miniengine 
+
+# creating our screen and the objects
+screen = Miniengine.Window(800, 800, "Simulation")
+basketball = Miniengine.Object(40, 40, (400, 600), 10, 80, -91, "orange", screen, gravity=True)
+tennisball = Miniengine.Object(20, 20, (400, 400), 1, 0, 0, "yellow", screen, gravity=True)
+
+
+# making the main game loop
+playing = True
+dt = 1/60*2  #interval between calculations
+clock= pygame.time.Clock() # set fps
+while playing:
+    screen.window.fill((0,0,0))  # hide previous frame
+    if basketball.checkColision(tennisball): # check if the balls colide
+        Miniengine.Colide(basketball, tennisball) # handling the colision
+    
+    # make the balls stay in the screen
+    basketball.border() 
+    tennisball.border()
+    #update the positions
+    basketball.updatePosition(dt)
+    tennisball.updatePosition(dt)
+    #draw them on the screen
+    screen.draw(tennisball)
+    screen.draw(basketball)
+
+    
+    clock.tick(60)
+    pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            playing= False```
+
+
+
