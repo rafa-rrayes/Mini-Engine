@@ -1,28 +1,18 @@
-import pygame
-import MiniEngine
+from Miniengine import *
 
-tela = MiniEngine.Tela(800, 800, "Simulação")
+screen = Simulation(1000, 1000, "Simulation", collisions=True, dt=0.001, steps=60000, speed=1)
+sun = Object(50, 50, (500, 500), 40, 0, 0, "yellow", screen, circle=True)
 
-terra = MiniEngine.Objeto(20, 20, (400, 600), 30, 40, -180, "verde", tela)
-sol = MiniEngine.Objeto(50, 50, (400, 400), 20, 0, 0, "amarelo", tela)
-asteroide = MiniEngine.Objeto(10, 10, (-770, -770), 20, 40, 45, "cinza", tela)
+earth = Object(20, 20, (500, 800), 10, 160, 180, "blue", screen, hitBorder=False, circle=True)
+mars = Object(20, 20, (500, 200), 10, 160, 0, "red", screen, hitBorder=False, circle=True)
 
+sun.addGravity(9.8, lock=True)
+sun.lockPos()
+mars.addGravity(9.8)
 
-clock = pygame.time.Clock()
-tick = 60    # The tick defines how many time the the simulation is update 1 one second
-dt = (1/tick)*4    #multiply the dt to increase the simulation speed
-Jogando = True
-while Jogando:
-    tela.tela.fill((0,0,0))
-    terra.atualizarPos(dt)
-    tela.desenhar(sol)
-    tela.desenhar(terra)
-    asteroide.atualizarPos(dt)
-    tela.desenhar(asteroide)
-    clock.tick(tick)
-    if terra.ChecarColidir(asteroide):
-        MiniEngine.Colide(asteroide, terra, COR=1)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            Jogando = False
-    pygame.display.update()
+screen.add_object(mars)
+earth.addGravity(9.8)
+screen.add_object(sun)
+screen.add_object(earth)
+screen.calculate()
+screen.run()
