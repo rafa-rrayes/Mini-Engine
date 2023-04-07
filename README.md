@@ -1,6 +1,6 @@
 # Miniengine
 
-Miniengine is a simple physics simulation library built on top of Pygame. It allows users to simulate the motion of objects, calculate collisions, and visualize the results. The library includes the `MiniEngine` module for handling physics calculations, and the `Renderer` class for rendering and displaying the simulations.
+Miniengine is a simple physics simulation library built on top of Pygame. It allows users to simulate the motion of objects, calculate collisions, and visualize the results.
 
 ## Installation
 
@@ -12,5 +12,5 @@ To install Miniengine, simply type `pip install Miniengine` into your terminal i
 
 ## Documentation
 
-The documentation isn't complete yet. You can access it in Github. There are also examples.
+The documentation isn't complete yet, and it is outdated. You can access it in Github. There are also examples.
 
