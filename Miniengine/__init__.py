@@ -1,26 +1,22 @@
 import math
 import pygame
 import time
-global coli
-coli = 0
 
 class Simulation():
-    def __init__(self, width, height, tittle, collisions = False):
+    def __init__(self, width, height, tittle, color, collisions = False):
         self.width = width
         self.height = height
         self.tittle = tittle
+        self.color = color
         self.objects = []
         self.positions_history = []
         self.collisions = collisions
         self.gravity_objects = []
         self.collisionLayers = []
-    def add_object(self, obj):
-        self.objects.append(obj)
-        for object in self.objects:
-            if object.collisionLayer != 0:
-                self.collisionLayers.append(object.collisionLayer)
-            if object.gravity:
-                self.gravity_objects.append(object)
+    def add_object(self, object):
+        self.objects.append(object)
+        if object.gravity:
+            self.gravity_objects.append(object)
     def store_positions(self):
         current_positions = []
         for obj in self.objects:
@@ -37,13 +33,16 @@ class Simulation():
         for objects in self.positions_history[:frames]:
             if x == round((self.lenght/self.dt)/(fps*self.lenght/speed)):
                 x=0
-                display.fill('dark green')
+                display.fill(self.color)
                 for object in objects:
-                    object[0].position = object[1]
                     if object[0].circle:
-                        pygame.draw.circle(display, object[0].color, object[0].position, object[0].width/2)
+                        object[0].position = list(object[0].position)
+                        object[0].position[0] = object[1][0]-object[0].width/2
+                        object[0].position[1] = object[1][1]-object[0].height/2
+                        object[0].position = tuple(object[0].position)
                     else:
-                        display.blit(object[0].body, (object[0].position))
+                        object[0].position = object[1]
+                    display.blit(object[0].body, (object[0].position))
                 pygame.display.update()
                 clock.tick(fps)
                 for event in pygame.event.get():
@@ -75,9 +74,8 @@ class Simulation():
             self.store_positions()
 
 
-
 class Object(pygame.Surface):
-    def __init__(self, height, width, position, mass, speed, direction, color, simulation,circle=False, COR = 1, collisionLayer=0, hitBorder=False):
+    def __init__(self, width, height, position, mass, speed, direction, color, simulation,circle=False, COR = 1, collisionLayer=0, hitBorder=False):
         self.height = height
         self.width = width
         self.gravity = False
@@ -85,6 +83,8 @@ class Object(pygame.Surface):
         self.circle = circle
         self.mass = mass
         self.speed = speed
+        if color == "black" or color == (0,0,0):
+            color = (0,0,1)
         self.color = color
         self.hitBorder = hitBorder
         self.collisionLayer = collisionLayer
@@ -92,7 +92,11 @@ class Object(pygame.Surface):
         self.simulation = simulation
         self.COR = COR
         self.body = pygame.Surface((self.width, self.height))
-        self.body.fill(color)
+        if circle:
+            self.body.set_colorkey((0, 0, 0))  
+            pygame.draw.circle(self.body, (color), (self.width/2, self.height/2), self.width/2)
+        else:
+            self.body.fill(color)
         self.dV = 0
         simulation.add_object(self)
         self.locked = False
@@ -102,6 +106,7 @@ class Object(pygame.Surface):
     def addGravity(self, g=0):
         self.gravity = True
         self.g = g
+        self.simulation.gravity_objects.append(self)
     def addAceleration(self, dV, angle):
         self.dV = dV
         self.angle = angle
@@ -113,7 +118,10 @@ class Object(pygame.Surface):
         new_x = x + dx * dt
         new_y = y + dy * dt
         self.position = (new_x, new_y)
-
+    def onScreen(self):
+        if self.position[0] > self.simulation.width+self.width or self.position[0] < 0-self.width or self.position[1] > self.simulation.height+self.height or self.position[1] < 0-self.height:
+            return False
+        return True
     def accelerate(self, dt):
         directionRad = math.radians(self.direction)
 
@@ -153,17 +161,16 @@ def checkCollision(object1, object2):
             
             # The rectangles are overlapping
                 return True
-
     # The rectangles are not overlapping
         return False
 def border(object):
-    global coli
     x, y = object.position
     if object.circle:
         radius = object.width / 2
         # Check collision with left or right border
         if x - radius < 0:
-            coli +=1
+            
+
             object.position = list(object.position)
             object.direction = 180 - object.direction
             object.position[0] = (object.width/2)
@@ -172,7 +179,7 @@ def border(object):
                 object.speed = 0
             object.position = tuple(object.position)
         if x + radius > object.simulation.width:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = 180 - object.direction
             object.position[0] = (object.simulation.width -object.width/2)
@@ -182,7 +189,7 @@ def border(object):
             object.position = tuple(object.position)
 
         if y - radius < 0:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = -object.direction
             object.position[1] = (object.width/2)
@@ -192,7 +199,7 @@ def border(object):
             object.position = tuple(object.position)
         
         if y+ radius > object.simulation.height:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = -object.direction
             object.position[1] = (object.simulation.height -object.width/2)-1
@@ -203,7 +210,7 @@ def border(object):
     else:
         # Check collision with left or right border
         if x < 0:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = 180 - object.direction
             object.position[0] = 0
@@ -212,7 +219,7 @@ def border(object):
                 object.speed = 0
             object.position = tuple(object.position)
         if x+object.width > object.simulation.width:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = 180 - object.direction
             object.position[0] = (object.simulation.width -object.width)
@@ -222,7 +229,7 @@ def border(object):
             object.position = tuple(object.position)
 
         if y < 0:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = -object.direction
             object.position[1] = 0
@@ -232,7 +239,7 @@ def border(object):
             object.position = tuple(object.position)
         
         if y+object.height > object.simulation.height:
-            coli +=1
+            
             object.position = list(object.position)
             object.direction = -object.direction
             object.position[1] = (object.simulation.height -object.height)-1
@@ -275,8 +282,6 @@ def distance(objeto1, objeto2):
     dy = y2 - y1
     return math.sqrt(dx ** 2 + dy ** 2)
 def Collide(object1, object2):
-    global coli
-    coli += 1
 
     COR = object1.COR*object2.COR
     x1, y1 = object1.position
