@@ -50,11 +50,12 @@ The `Object` class represents a 2D object in the simulation. The constructor tak
 
 ### Other Functions
 
-`Collide(object1, object2)`: Handles the collision between the two objects
-`distance(object1, object2)`: returns the distance between the two objects
-`calculate_gravity(objects, dt)`: Takes a list of objects and handles the effect of gravity on each object and updates its speed and direction.
-`border(object)`: Checks if object is hitting the border, and if so handles the colision.
-`checkCollision(object1, object2)`: Checks if the two objects are colliding
+* `Collide(object1, object2)`: Handles the collision between the two objects
+* `distance(object1, object2)`: returns the distance between the two objects
+* `calculate_gravity(objects, dt)`: Takes a list of objects and handles the effect of gravity on each object and updates its speed and direction.
+* `Collide(object1, object2)`: Handles the collision between the two object
+* `border(object)`: Checks if object is hitting the border, and if so handles the colision.
+* `checkCollision(object1, object2)`: Checks if the two objects are colliding
 
 ## Example
 
