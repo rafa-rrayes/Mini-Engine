@@ -9,8 +9,3 @@ To install Miniengine, simply type `pip install Miniengine` into your terminal i
 ## Dependencies
 
 - Pygame
-
-## Documentation
-
-The documentation isn't complete yet, and it is outdated. You can access it in Github. There are also examples.
-
