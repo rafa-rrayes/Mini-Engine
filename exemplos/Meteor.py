@@ -7,7 +7,6 @@ sol = Miniengine.Object(50, 50, (400, 400), 400, 0, 0, "yellow", tela,  circle=T
 asteroide = Miniengine.Object(10, 10, (-3500, 600), 1, 190, 0, "grey", tela, circle=True)
 
 sol.addGravity(10)
-sol.lockPos
 terra.addGravity(10)
 tela.calculate(80, 0.001)
 tela.run(speed=3)
