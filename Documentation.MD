@@ -1,23 +1,25 @@
-# MiniEngine
+# MiniEngine 1.0.1
 
-MiniEngine is a simple physics engine for simulating and rendering 2D objects. It includes the `Window` class for creating a display window and the `Object` class for defining objects. The `Renderer` class is responsible for running the simulation and rendering the objects.
+MiniEngine is a simple physics engine for simulating and rendering 2D objects.
 
 ## Tela Class
 
-The `Window` class represents the display window for the simulation. The constructor takes the following parameters:
+The `Simulation` class represents the display window for the simulation. The constructor takes the following parameters:
 
 ### Parameters
 
 * `width` (int): Width of the display window in pixels.
 * `height` (int): Height of the display window in pixels.
 * `title` (str): Title of the display window.
+* `color` (str or tupple): color of the background
+
 
 ### Methods
 
-* `add_object(object)`: Adds an instance of `Objeto` to the display window.
-* `draw(object)`: Draws the object in its current position
+* `calculate(lenght, dt)`: calculates the entire simulation based on the initial coditions of the objects
+* `run(speed)`: Plays the simulation. You need to calculate the simulation first.
 
-## Objeto Class
+## Object Class
 
 The `Object` class represents a 2D object in the simulation. The constructor takes the following parameters:
 
@@ -30,74 +32,47 @@ The `Object` class represents a 2D object in the simulation. The constructor tak
 * `speed` (tuple): Initial velocity of the object as an (x, y) tuple.
 * `direction` (float): Current direction of the object in degrees.
 * `color` (tuple): Color of the object.
-* `window` (Window): Instance of the Window class.
-* `gravity`(Bool): Wether the object is affected by downwards gravity
+* `simulation` (Simulation): Which simulation the object belongs to.
+* `circle`(Bool): Wether the object is a circle or not. If not defined, it's a square.
+* `COR`(float): Coeficient of restituition of the object. If not defined, it's 1
+* `colisionLayer`(int): Objects in the same colision layer will colide. if not defined, it's 0
+* `hitBorder`(Bool): wheter the object colides with the border or not. If not defined, it's False
  
 ### Methods
 
-* `updatePosition(dt, gravity)`: Updates the object's position in dt time. 
-* `checkColision(object)`: Checks if the object has colided with another object
-* `border()`: Reverses object direction if it hits the screen border
-* `accelerate(dV, angle)`: Accelerates the object. dV is the speed increment, angle is the direction it is accelerating
-* `gravitate(object)` (tuple): Initial velocity of the object as an (x, y) tuple.
+* `updatePosition(dt)`: Updates the object's position in dt time. 
+* `addGravity(g)`: Adds gravity to the object.
+* `addAcceleration(dV, angle)`: Adds acceleration to the object.
+* `lockPos()`: Locks the object in place.
+* `onScreen()`: Returns True if at least a part of the object is on screen
+* `accelerate(dt)`: increments the speed of the object using its dV in dt time.
 
-## Renderer Class
 
-The `Renderer` class is responsible for running the simulation and rendering the objects. The constructor takes the following parameters:
+### Other Functions
 
-### Parameters
-
-* `tela` (Tela): Instance of the Tela class.
-* `objetos` (list): List of Objeto instances to be rendered in the simulation.
-* `dt` (float, optional): Time interval between updates in the simulation. Default is 1/60.
-* `length` (int, optional): Length of time the simulation runs in seconds. Default is 2.
-* `speed` (float, optional): Speed factor of the simulation. Default is 1.
-* `gravity` (bool, optional): If True, gravitational forces between objects are considered. Default is False.
-
-### Methods
-
-* `render(simulation_name)`: Runs the simulation and saves each frame as an image with the given `simulation_name`. The images will be saved in a folder named "renders".
-* `store_positions()`: Stores the positions of objects at each time step in a dictionary.
-* `get_positions()`: Returns the stored positions of objects as a dictionary.
+`Collide(object1, object2)`: Handles the collision between the two objects
+`distance(object1, object2)`: returns the distance between the two objects
+`calculate_gravity(objects, dt)`: Takes a list of objects and handles the effect of gravity on each object and updates its speed and direction.
+`border(object)`: Checks if object is hitting the border, and if so handles the colision.
+`checkCollision(object1, object2)`: Checks if the two objects are colliding
 
 ## Example
 
-A small simulation of a tenis ball and a basketball 
+A small simulation of a snooker game
 ```
-import pygame
-import Miniengine 
-
-# creating our screen and the objects
-screen = Miniengine.Window(800, 800, "Simulation")
-basketball = Miniengine.Object(40, 40, (400, 600), 10, 80, -91, "orange", screen, gravity=True)
-tennisball = Miniengine.Object(20, 20, (400, 400), 1, 0, 0, "yellow", screen, gravity=True)
+from Miniengine import *
 
 
-# making the main game loop
-playing = True
-dt = 1/60*2  #interval between calculations
-clock= pygame.time.Clock() # set fps
-while playing:
-    screen.window.fill((0,0,0))  # hide previous frame
-    if basketball.checkColision(tennisball): # check if the balls colide
-        Miniengine.Colide(basketball, tennisball) # handling the colision
-    
-    # make the balls stay in the screen
-    basketball.border() 
-    tennisball.border()
-    #update the positions
-    basketball.updatePosition(dt)
-    tennisball.updatePosition(dt)
-    #draw them on the screen
-    screen.draw(tennisball)
-    screen.draw(basketball)
-
-    
-    clock.tick(60)
-    pygame.display.update()
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            playing= False```
+sim = Simulation(400, 800, "Title", "dark green", True)
 
 
+ball = Object(20, 20, (200, 200), 1, 0, 0, "yellow", sim, hitBorder=True, circle=True, COR = 0.9)
+ball2 = Object(20, 20, (215, 185), 2, 0, 0, "red", sim, hitBorder=True, circle=True, COR = 0.9)
+ball3 = Object(20, 20, (185, 185), 2, 0, 0, "green", sim, hitBorder=True, circle=True, COR = 0.9) 
+ball4 = Object(20, 20, (200, 170), 2, 0, 0, "blue", sim, hitBorder=True, circle=True, COR = 0.9)
+ball5= Object(20, 20, (230, 170), 2, 0, 0, "black", sim, hitBorder=True, circle=True, COR = 0.9)
+ball6 = Object(20, 20, (170, 170), 2, 0, 0, "orange", sim, hitBorder=True, circle=True, COR = 0.9)
+ball7 = Object(20, 20, (200, 600), 4, 200,  270, "white", sim, hitBorder=True, circle=True, COR = 0.9)
 
+sim.calculate(20, 0.001)
+sim.run(speed=2)
